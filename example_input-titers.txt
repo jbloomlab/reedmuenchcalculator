@@ -1,0 +1,4 @@
+Here are the computed titers in TCID50 per ul.
+wildtype:	251.189
+mutant1:	1.433
+mutant2:	432.876
