@@ -1,15 +1,16 @@
 # This file contains an example of the input to the program ReedMuenchCalculator.
 # Lines beginning with a pound sign (#) are comments, and are ignored. Empty lines are also ignored.
 #
-# The first entry begins with the key VOLUME and specifies the volume of virus in the first row in ul. For example, here our first well has 10 ul of virus.
+# The first entry begins with the key VOLUME and specifies the volume of virus in the first row in ul. For example, here our first well has 10 ul of virus. If the volume is in decimal format, it must be specified with a leading zero. That is, 0.1 is valid, but .1 is not.
 VOLUME 10
 #
-# The next entry begins with the key DILUTION and specifies the dilution factor between successive rows. For example, if you are making 10-fold serial dilutions, this should be 10.
+# The next entry begins with the key DILUTION and specifies the dilution factor between successive rows. For example, if you are making 10-fold serial dilutions, this should be 10. The dilution must be a number > 1.
 DILUTION 10
 #
 # The next entry begins with the key NREPLICATES and specifies the number of replicates for each sample. For example, if each sample includes 6 replicates then this should be 6. There need to be at least 2 replicates.
 NREPLICATES 6
-# The remaining entries give the data for each sample. For each sample, there should be a line with the key SAMPLE followed by the sample name. There should then be NREPLICATES lines giving the row letters with cytopathic effect. The rows are labeled as on a standard 96-well plate as A, B, C, D, E, F, G, and H. All rows with cytopathic effect for each replicate should be listed.
+#
+# The remaining entries give the data for each sample. For each sample, there should be a line with the key SAMPLE followed by the sample name. There should then be NREPLICATES lines giving the row letters with cytopathic effect. The rows are labeled as on a standard 96-well plate as A, B, C, D, E, F, G, and H. All rows with cytopathic effect for each replicate should be listed. If there is no cytopathic effect in any rows for a sample, this should be indicated by na, as in the mutant2 sample in the example below.
 SAMPLE wildtype
 A, B, C, D
 A, B, C, D
@@ -19,12 +20,12 @@ A, B, C
 A, B, C, D
 
 SAMPLE mutant1
-A, B, C
 A, B
-A, B, C, D
+A, B
+na
+A
 A, B, C
-A, B, C
-A, B, C, D
+A, C
 
 SAMPLE mutant2
 A, B, C, D
