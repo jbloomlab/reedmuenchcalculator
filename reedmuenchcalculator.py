@@ -100,6 +100,30 @@ def ParseInput(infile):
     return (samplenames, sampledata, volume, dilution)
 
 
+def AskOverwrite(filename):
+    """If a file already exists, determines whether it should be overwritten.
+
+    filename -> The name of the file which we are examining.
+    If filename does not already exist, then this function returns
+        True as we can write it without overwriting anything.
+    If filename does already exist, then we ask the user to specify
+        whether it should be overwritten. Returns True if the user's
+        answer is yes, and False if the answer is no.
+    """
+    if os.path.isfile(filename):
+        ans = None
+        while True:
+            ans = raw_input("File %s already exists. Should we overwrite it [Y, N]? " % filename).strip()
+            if ans in ['Y', 'y']:
+                print "The existing file will be overwritten."
+                return True
+            elif ans in ['N', 'n']:
+                print "The existing file will be overwritten."
+                return False
+            else:
+                print "Invalid entry. Try again."
+    else:
+        return True
 
 
 def main():
@@ -125,6 +149,15 @@ def main():
     print "\nHere are the computed titers in TCID50 per ul:"
     for sample in samplenames:
         print "%s: %.3f" % (sample, titers[sample])
+    (base, ext) = os.path.splitext(infile)
+    outfile = '%s-titers.txt' % base
+    print "\nNow we will write these titers to the output file %s." % outfile
+    if AskOverwrite(outfile):
+        f = open(outfile, 'w')
+        f.write("Here are the computed titers in TCID50 per ul.\n")
+        for sample in samplenames:
+            f.write("%s:\t%.3f\n" % (sample, titers[sample]))
+        f.close()
 
 
 main() # run the script.
