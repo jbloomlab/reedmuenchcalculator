@@ -11,6 +11,7 @@ import os
 import sys
 import re
 import math
+import traceback
 
 
 
@@ -157,7 +158,7 @@ def ParseInput(infile):
                     if x not in validrows:
                         raise IOError("Invalid row specification of %s in the following line: %s\nValid row labels are A to H." % (x, line))
                     if rows.count(x) != 1:
-                        raise IOError("Row identifier of %s appears more than once in the following line: %s" % (row, line))
+                        raise IOError("Row identifier of %s appears more than once in the following line: %s" % (x, line))
                 sampledata[sample].append(rows)
     return (samplenames, sampledata, volume, dilution)
 
@@ -180,7 +181,7 @@ def AskOverwrite(filename):
                 print "The existing file will be overwritten."
                 return True
             elif ans in ['N', 'n']:
-                print "The existing file will be overwritten."
+                print "The existing file will not be overwritten."
                 return False
             else:
                 print "Invalid entry. Try again."
@@ -221,5 +222,11 @@ def main():
             f.write("%s:\t%.3f\n" % (sample, titers[sample]))
         f.close()
 
-
-main() # run the script.
+# run the script in a try - except loop so the terminal doesn't close before the error can be diagnosed in windows.
+try: 
+    main() # run the script.
+except Exception, e:
+    print "ERROR."
+    print e
+finally:
+    raw_input('Press any key to close the program.')
