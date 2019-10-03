@@ -1,10 +1,9 @@
 """Calculates titer using Reed-Muench formula.
-
 This script takes a text input file. It calculates the titer for
 all of the samples, and prints them out to a new text file with the
 name based on the input file. 
-
-Written by Jesse Bloom, 2012."""
+Written by Jesse Bloom, 2012.
+Updated to python3 by Andrea Loes & Allie Greaney, 2019"""
 
 
 import os
@@ -14,10 +13,8 @@ import math
 import traceback
 
 
-
 def Titer(infectedwells, volume, dilution):
     """Calculates the titer using the Reed-Muench formula.
-
     infectedwells -> This is a list of lists. The number of lists
         gives the number of replicates, so there are len(infectedwells)
         replicates. Each of the entry lists describes the wells with
@@ -30,11 +27,9 @@ def Titer(infectedwells, volume, dilution):
     volume -> This is the infection volume in the first row (row A).
     dilution -> This is the dilution factor between successive rows.
         For example, 10 is a typical dilution factor for this assay.
-
     This method returns a number which gives the titer as TCID50
         per unit volume in whatever units are used to specify
         the input variable volume.
-
     The Reed-Muench formula is implemented as described in
         http://whqlibdoc.who.int/monograph/WHO_MONO_23_(3ed)_appendices.pdf
         http://www.fao.org/docrep/005/ac802e/ac802e0w.htm
@@ -86,7 +81,6 @@ def Titer(infectedwells, volume, dilution):
 
 def ParseInput(infile):
     """Reads an input text file.
-
     This file should be in the format specified by the example input file.
     The returned variable is the following tuple: (sampledata, volume, dilution)
     samplenames -> This is a list of the sample names in the order in
@@ -132,7 +126,7 @@ def ParseInput(infile):
     linespersample = nreplicates + 1
     if len(lines) % linespersample != 0:
         raise IOError("The sample data is not specified correctly. There should be a total of %d lines for each sample (the sample name plus a line for each of the %d replicates), but the number additional lines is not divisible by %d." % (linespersample, nreplicates, linespersample))
-    nsamples = len(lines) / linespersample
+    nsamples = len(lines) // linespersample
     sampledata = {}
     namematch = re.compile('^\s*SAMPLE\s+(?P<name>.+)\n$')
     validrows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] 
@@ -165,7 +159,6 @@ def ParseInput(infile):
 
 def AskOverwrite(filename):
     """If a file already exists, determines whether it should be overwritten.
-
     filename -> The name of the file which we are examining.
     If filename does not already exist, then this function returns
         True as we can write it without overwriting anything.
@@ -176,45 +169,45 @@ def AskOverwrite(filename):
     if os.path.isfile(filename):
         ans = None
         while True:
-            ans = raw_input("File %s already exists. Should we overwrite it [Y, N]? " % filename).strip()
+            ans = input("File %s already exists. Should we overwrite it [Y, N]? " % filename).strip()
             if ans in ['Y', 'y']:
-                print "The existing file will be overwritten."
+                print("The existing file will be overwritten.")
                 return True
             elif ans in ['N', 'n']:
-                print "The existing file will not be overwritten."
+                print("The existing file will not be overwritten.")
                 return False
             else:
-                print "Invalid entry. Try again."
+                print("Invalid entry. Try again.")
     else:
         return True
 
 
 def main():
     """Main body of the script."""
-    print "\nWelcome to the Bloom lab Reed-Muench calculator.\n"
+    print("\nWelcome to the Bloom lab Reed-Muench calculator.\n")
     infile = None
     while not infile:
-        infile = raw_input("Enter the name of the input file in text format: ").strip()
+        infile = input("Enter the name of the input file in text format: ").strip()
         if os.path.isfile(infile):
             break
         elif infile in ['Q', 'q']:
-            print "Quitting."
+            print("Quitting.")
             sys.exit()
         else:
             infile = None
-            print "Failed to find the specified input file of %s. Try again to enter a valid file name, or enter Q to quit." % infile
-    print "Reading input from the file %s." % infile
+            print("Failed to find the specified input file of %s. Try again to enter a valid file name, or enter Q to quit." % infile)
+    print("Reading input from the file %s." % infile)
     (samplenames, sampledata, volume, dilution) = ParseInput(infile)
-    print "Read data for %d samples." % len(sampledata)
+    print("Read data for %d samples." % len(sampledata))
     titers = {}
-    for (sample, data) in sampledata.iteritems():
+    for (sample, data) in sampledata.items():
         titers[sample] = Titer(data, volume, dilution)
-    print "\nHere are the computed titers in TCID50 per ul:"
+    print("\nHere are the computed titers in TCID50 per ul:")
     for sample in samplenames:
-        print "%s: %.3f" % (sample, titers[sample])
+        print("%s: %.3f" % (sample, titers[sample]))
     (base, ext) = os.path.splitext(infile)
     outfile = '%s-titers.txt' % base
-    print "\nNow we will write these titers to the output file %s." % outfile
+    print("\nNow we will write these titers to the output file %s." % outfile)
     if AskOverwrite(outfile):
         f = open(outfile, 'w')
         f.write("Here are the computed titers in TCID50 per ul.\n")
@@ -225,8 +218,8 @@ def main():
 # run the script in a try - except loop so the terminal doesn't close before the error can be diagnosed in windows.
 try: 
     main() # run the script.
-except Exception, e:
-    print "ERROR."
-    print e
+except Exception as e:
+    print("ERROR.")
+    print(e)
 finally:
-    raw_input('Press any key to close the program.')
+    input('Press any key to close the program.') 
