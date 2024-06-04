@@ -102,19 +102,19 @@ def ParseInput(infile):
         expected format or specifies invalid values.
     """
     lines = [line for line in open(infile).readlines() if line[0] != '#' and not line.isspace()]
-    line1match = re.compile('^\s*VOLUME\s+(?P<volume>\d+\.{0,1}\d*)\s*\n$')
+    line1match = re.compile(r'^\s*VOLUME\s+(?P<volume>\d+\.{0,1}\d*)\s*\n$')
     m = line1match.search(lines[0])
     if not m:
         raise IOError("Failed to parse VOLUME from the first line.")
     volume = float(m.group('volume'))
-    line2match = re.compile('^\s*DILUTION\s+(?P<dilution>\d+\.{0,1}\d*)\s*\n$')
+    line2match = re.compile(r'^\s*DILUTION\s+(?P<dilution>\d+\.{0,1}\d*)\s*\n$')
     m = line2match.search(lines[1])
     if not m:
         raise IOError("Failed to parse DILUTION from the second line.")
     dilution = float(m.group('dilution'))
     if dilution <= 1:
         raise IOError("The dilution factor must be > 1, but read a value of %f" % dilution)
-    line3match = re.compile('^\s*NREPLICATES\s+(?P<nreplicates>\d+)\s*\n$')
+    line3match = re.compile(r'^\s*NREPLICATES\s+(?P<nreplicates>\d+)\s*\n$')
     m = line3match.search(lines[2])
     if not m:
         raise IOError("Failed to parse an integer value for NREPLICATES from the third line.")
@@ -128,7 +128,7 @@ def ParseInput(infile):
         raise IOError("The sample data is not specified correctly. There should be a total of %d lines for each sample (the sample name plus a line for each of the %d replicates), but the number additional lines is not divisible by %d." % (linespersample, nreplicates, linespersample))
     nsamples = len(lines) // linespersample
     sampledata = {}
-    namematch = re.compile('^\s*SAMPLE\s+(?P<name>.+)\n$')
+    namematch = re.compile(r'^\s*SAMPLE\s+(?P<name>.+)\n$')
     validrows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] 
     samplenames = []
     for isample in range(nsamples):
